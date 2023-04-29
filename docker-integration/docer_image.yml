@@ -1,0 +1,9 @@
+---
+- name: downloading image
+  hosts: all
+  serial: 1
+  tasks: 
+    - name: downloading images
+      docker_image:
+        name: nginx
+        source: pull

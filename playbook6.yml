@@ -1,0 +1,22 @@
+---
+- name: jenkins installation using Host scope variables
+  hosts: all
+  tasks:
+    - name: installing jenkins 
+      apt:
+        name: "{{item.a}}"
+        state: "{{item.b}}"
+        update_cache: "{{item.c}}"
+      with_items:
+        - {a: openjdk-11-jdk,b: present,c: yes}
+        - {a: git,b: present,c: no}
+        - {a: maven,b: present,c: no}
+    - name: uninstalling
+      apt:
+        name: "{{item.a}}"
+        state: "{{item.b}}"
+        update_cache: "{{item.c}}"
+      with_items:
+        - {a: openjdk-11-jdk,b: absent,c: no}
+        - {a: git,b: absent,c: no}
+        - {a: maven,b: absent,c: no}

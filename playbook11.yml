@@ -1,0 +1,40 @@
+---
+- name: installing qa server using group host variables
+  hosts: test_server
+  gather_facts: false
+  become: yes
+  tasks:
+    - name: installing qa environment
+      apt:
+        name: "{{item.a}}"
+        state: "{{item.b}}"
+        update_cache: "{{item.c}}"
+      with_items:
+        - {a: "{{a}}",b: "{{b}}",c: "{{c}}"}
+        - {a: "{{d}}",b: "{{b}}",c: "{{e}}"}
+    - name: copying the tomcat_user.xml
+      copy:
+        src: /home/ubuntu/tomcat-users.xml
+        dest: /etc/tomcat9
+    - name: restarting the server
+      service:
+        name: tomcat9
+        state: restarted
+    - name: pause for 1 min
+      pause:
+        minutes: 1
+    - name: check url response
+      uri:
+        url: "{{item}}"
+        status_code: 200
+      with_items:
+        - http://172.31.89.7:8080
+        - http://172.31.85.242:8080
+    - name: uninstalling
+      apt:
+        name: "{{item.a}}"
+        state: "{{item.b}}"
+        purge: "{{item.c}}"
+      with_items:
+        - {a: "{{a}}", b: "{{f}}",c: "{{c}}"}
+        - {a: "{{d}}", b: "{{f}}",c: "{{c}}"}

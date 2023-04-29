@@ -1,0 +1,7 @@
+a: openjdk-11-jdk
+b: present
+c: yes
+d: git
+e: no
+f: maven
+

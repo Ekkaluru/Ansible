@@ -1,0 +1,12 @@
+---
+- name: creating users using global scope variable
+  hosts: all
+  tasks:
+    - name: creating user
+      user:
+        name: "{{a}}"
+        password: "{{b}}"
+        shell: "{{c}}"
+        home: "{{d}}"
+        comment: "{{e}}"
+           

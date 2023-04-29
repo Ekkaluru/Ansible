@@ -1,0 +1,16 @@
+---
+- name: creating dockercompose from the level of ansible
+  hosts: all
+  tasks:
+    - name: creating mysql
+      docker_container:
+        name: mydb
+        image: mysql
+        env:
+          MYSQL_ROOT_PASSWORD: mydb
+    - name: creating wp container link it with mydb
+      docker_container:
+        name: mywp
+        image: wordpress
+        links:
+          - mydb:mysql

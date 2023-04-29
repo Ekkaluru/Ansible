@@ -1,0 +1,7 @@
+---
+a: tomcat9
+b: present
+c: yes
+d: tomcat9-admin
+e: no
+f: absent

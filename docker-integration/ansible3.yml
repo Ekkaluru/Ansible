@@ -1,0 +1,11 @@
+---
+- name: working on nginx containers using sequence
+  hosts: all
+  tasks:
+    - name: creating nginx container
+      docker_container:
+        name: "nginx{{item}}"
+        image: nginx
+        ports:
+          - "606{{item}}"
+      with_sequence: count=5

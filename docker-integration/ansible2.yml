@@ -1,0 +1,10 @@
+---
+- name: working on docker containers
+  hosts: all
+  tasks:
+    - name: creating a tomee container
+      docker_container:
+        name: mytomee
+        image: tomee
+        ports:
+          - 9090:8080

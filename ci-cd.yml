@@ -1,0 +1,70 @@
+---
+- name: Setting up dev server
+  hosts: Dev_server
+  tasks:
+    - name: Installing s/w's
+      apt:
+        name: "{{item.a}}"
+        state: present
+        update_cache: "{{item.b}}"
+      with_items:
+        - {a: openjdk-11-jdk,b: yes}
+        - {a: git,b: no}
+        - {a: maven,b: no}
+- name: Setting up qa server
+  hosts: qa_server
+  tasks:
+    - name: Installing s/w's
+      apt:
+        name: "{{item.a}}"
+        state: present
+        update_cache: "{{item.b}}"
+      with_items:
+       - {a: openjdk-11-jdk,b: yes}
+       - {a: git,b: no}
+       - {a: tomcat9,b: no}
+       - {a: tomcat9-admin,b: no}
+- name: setting up prod server
+  hosts: prod_server
+  tasks:
+    - name: Installing s/w's
+      apt:
+        name: "{{item.a}}"
+        state: present
+        update_cache: "{{item.b}}"
+      with_items:
+        - {a: tomcat9,b: yes}
+        - {a: tomcat9-admin,b: no}
+- name:  performing Continuous Download and Continuous Build
+  hosts: Dev_server
+  tasks:
+    - name: Downloading the dev code from github
+      git:
+        repo: https://github.com/Ekkaluru/maven.git
+        dest: dev-git
+    - name: creating an artifact
+      shell: cd dev-git; mvn package
+    - name: copying artifact into controller 
+      fetch:
+        src: /home/ubuntu/dev-git/webapp/target/webapp.war
+        dest: /tmp
+- name: performing deployment and testing 
+  hosts: qa_server
+  tasks:
+    - name: performing deployment
+      copy:
+        src: /tmp/172.31.28.45/home/ubuntu/dev-git/webapp/target/webapp.war
+        dest: /var/lib/tomcat9/webapps/testapp.war
+    - name: downloading selenium Scripts from github
+      git:
+        repo: https://github.com/Ekkaluru/functional-testing.git
+        dest: test-git
+    - name: Executing the selenium scripts
+      shell: java -jar test-git/testing.jar
+- name: deploying into prodserver
+  hosts: prod_server
+  tasks:
+    - name: deploying into production
+      copy:
+        src: /tmp/172.31.28.45/home/ubuntu/dev-git/webapp/target/webapp.war
+        dest: /var/lib/tomcat9/webapps/prodapp.war

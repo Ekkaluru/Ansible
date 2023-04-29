@@ -1,0 +1,16 @@
+---
+- name: checking whether the file has executable permissions
+  hosts: all
+  tasks:
+    - name: checking if file has executable permissions
+      stat:
+        path: /tmp/file1
+      register: result
+    - name: displaying output of this module
+      debug:
+        var: result
+    - name: deleting the file if file has Executable permissions
+      file:
+        name: /tmp/file1
+        state: absent
+      when: result.stat.executable == true

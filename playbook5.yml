@@ -1,0 +1,19 @@
+---
+- name: installing tomcat using play scope variables
+  hosts: test_server
+  vars:
+    - a: tomcat9
+    - b: present
+    - c: yes
+    - d: absent
+  tasks:
+    - name: install tomcat9
+      apt:
+        name: "{{a}}"
+        state: "{{b}}"
+        update_cache: '{{c}}'
+    - name: uninstall tomcat9
+      apt:
+        name: "{{a}}"
+        state: "{{d}}"
+        purge: "{{c}}"

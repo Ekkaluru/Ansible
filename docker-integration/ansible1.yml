@@ -1,0 +1,15 @@
+---
+- name: installing docker packages to integrate it with ansible
+  hosts: all
+  tasks: 
+    - name: installing pyhton and docker
+      apt:
+        name: "{{item}}"
+        state: present
+        uppdate_cache: yes
+      with_items:
+        - pyhton3-pip
+        - docker.io
+
+    - name: installing docker-py using shell
+      shell: pip3 install docker-py

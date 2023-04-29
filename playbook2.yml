@@ -1,0 +1,32 @@
+---
+- name: configuring Apache2
+  hosts: all
+  tasks:
+    - name: installing apache2
+      apt:
+        name: apache2
+        state: present
+        update_cache: yes
+    - name: edit the inde file
+      copy:
+        content: "welcome to apache page"
+        dest: /var/www/html/index.html
+
+    - name: Restartting Apache2
+      service:
+        name: apache2
+        state: restarted
+    
+    - name: checking the url response
+      uri:
+        url: http://172.31.89.7
+        status_code: 200
+    - name: checking the url response of worker2
+      uri:
+        url: http://172.31.93.90
+        status_code: 200
+    - name: uninstalling the package
+      apt:
+        name: apache2
+        state: absent
+        purge: yes
